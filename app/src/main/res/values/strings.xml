@@ -3,5 +3,13 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="back">Back</string>
+    <string name="deleteNote">Удалить</string>
+    <string name="close">Закрыть</string>
+    <string name="my_app_name">Заметки</string>
+    <string name="about">О программе</string>
+    <string name="exit">Выход</string>
+    <string name="drawer_header">Profile</string>
+    <string name="about_text">Приложение разработано в учебных целях с помощью GB</string>
+    <string name="profileName">Профиль</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package ru.abyzbaev.mynotes;
 
+import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -10,9 +11,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.print.PrintAttributes;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +59,7 @@ public class NotesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
+
         /**
          * Кнопка "добавить" заметку
          */
@@ -76,6 +80,7 @@ public class NotesFragment extends Fragment {
             showLandNoteDetails(note);
         }
     }
+
 
 
     private boolean isLandscape() {
@@ -106,34 +111,33 @@ public class NotesFragment extends Fragment {
                     showNoteDetails(Note.getNotes().get(index)));
 
             );*/
-            tv.setOnLongClickListener(n -> {
-                Toast toast = Toast.makeText(requireContext(), "", Toast.LENGTH_LONG);
-                toast.show();
-                return false;
-            });
+            initPopupMenu(tv, note);
+
             i++;
         }
     }
 
-    /*private void initNotes(View view) {
-        LinearLayout layoutView = (LinearLayout) view;
-        layoutView.removeAllViews();
-        for (int i = 0; i < Note.getNotes().size(); i++) {
-            TextView tv = new TextView(getContext());
-            tv.setText(Note.getNotes().get(i).getTitle());
-            tv.setTextSize(24);
-            layoutView.addView(tv);
-
-            final int index = i;
-            tv.setOnClickListener(v -> showNoteDetails(Note.getNotes().get(index)));
-            tv.setOnLongClickListener(n -> {
-                Toast toast = Toast.makeText(requireContext(), "11", Toast.LENGTH_LONG);
-                toast.show();
-                return false;
+    private void initPopupMenu(TextView tv, Map.Entry<Integer, Note> note) {
+        tv.setOnLongClickListener(n -> {
+            Activity activity = requireActivity();
+            PopupMenu popupMenu = new PopupMenu(activity,n);
+            activity.getMenuInflater().inflate(R.menu.popup, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()){
+                        case R.id.action_popup_delete:
+                            Note.deleteNote(note.getValue().getId());
+                            initNotes();
+                            return true;
+                    }
+                    return true;
+                }
             });
-        }
-    }*/
-
+            popupMenu.show();
+            return true;
+        });
+    }
 
     private void showNoteDetails(Note note) {
         this.note = note;

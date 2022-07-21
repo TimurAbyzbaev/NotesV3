@@ -11,5 +11,7 @@
     <string name="drawer_header">Profile</string>
     <string name="about_text">Приложение разработано в учебных целях с помощью GB</string>
     <string name="profileName">Профиль</string>
+    <string name="navigation_drawer_open">open</string>
+    <string name="navigation_drawer_close">close</string>
 
 </resources>

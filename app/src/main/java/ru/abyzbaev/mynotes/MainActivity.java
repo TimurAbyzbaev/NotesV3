@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.res.Configuration;
 import android.net.LinkAddress;
@@ -31,11 +32,14 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.notes_container, new NotesFragment())
                     .commit();
         }
+        //androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
         initDrawer();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu,menu);
         LinearLayout profile = findViewById(R.id.profile_edit);
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,13 +47,18 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(getApplicationContext(),
                         "Настройки профиля!", Toast.LENGTH_SHORT);
                 toast.show();
+
             }
         });
-        return false;
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void initDrawer(){
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
+
+
+
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override

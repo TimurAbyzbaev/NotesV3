@@ -7,21 +7,27 @@
     tools:context=".MainActivity"
     tools:openDrawer="start"
     android:id="@+id/drawer_layout">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <FrameLayout
+            android:id="@+id/notes_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            >
+        </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/notes_container"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        >
-    </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/note_container"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2">
-    </FrameLayout>
+        <FrameLayout
+            android:id="@+id/note_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3">
+        </FrameLayout>
+
+    </LinearLayout>
+
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
@@ -29,7 +35,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:menu="@menu/navigation_drawer"
-        app:headerLayout="@layout/drawer_header"/>
+        app:headerLayout="@layout/drawer_header">
+
+    </com.google.android.material.navigation.NavigationView>
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

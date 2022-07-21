@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".ProfileFragment"
     android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp">
+    android:layout_marginRight="20dp"
+    android:id="@+id/profile">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,6 +30,7 @@
                 android:textSize="15sp"
                 />
             <EditText
+                android:id="@+id/profile_name"
                 android:layout_width="0dp"
                 android:layout_columnWeight="2"
                 android:layout_height="wrap_content"
@@ -41,6 +43,7 @@
                 android:textSize="15sp"
                 />
             <EditText
+                android:id="@+id/profile_nickname"
                 android:layout_width="0dp"
                 android:layout_columnWeight="2"
                 android:layout_height="wrap_content"

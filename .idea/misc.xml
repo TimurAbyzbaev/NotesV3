@@ -3,11 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/GeekBrains/secondQuarter/My NotesV3/MyNotes2/app/src/main/res/layout-land/activity_main.xml" value="0.18" />
-        <entry key="..\:/GeekBrains/secondQuarter/My NotesV3/MyNotes2/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/GeekBrains/secondQuarter/My NotesV3/MyNotes2/app/src/main/res/layout-land/activity_main.xml" value="0.1" />
+        <entry key="..\:/GeekBrains/secondQuarter/My NotesV3/MyNotes2/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/GeekBrains/secondQuarter/My NotesV3/MyNotes2/app/src/main/res/layout/drawer_header.xml" value="0.2916666666666667" />
         <entry key="..\:/GeekBrains/secondQuarter/My NotesV3/MyNotes2/app/src/main/res/layout/fragment_about.xml" value="0.21240942028985507" />
-        <entry key="..\:/GeekBrains/secondQuarter/My NotesV3/MyNotes2/app/src/main/res/layout/fragment_profile.xml" value="0.33" />
+        <entry key="..\:/GeekBrains/secondQuarter/My NotesV3/MyNotes2/app/src/main/res/layout/fragment_note.xml" value="0.17831813576494426" />
+        <entry key="..\:/GeekBrains/secondQuarter/My NotesV3/MyNotes2/app/src/main/res/layout/fragment_notes.xml" value="0.17831813576494426" />
+        <entry key="..\:/GeekBrains/secondQuarter/My NotesV3/MyNotes2/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
+        <entry key="..\:/GeekBrains/secondQuarter/My NotesV3/MyNotes2/app/src/main/res/menu/main_menu.xml" value="0.22" />
         <entry key="..\:/GeekBrains/secondQuarter/My NotesV3/MyNotes2/app/src/main/res/menu/navigation_drawer.xml" value="0.29444444444444445" />
         <entry key="..\:/GeekBrains/secondQuarter/My NotesV3/MyNotes2/app/src/main/res/menu/popup.xml" value="0.25" />
       </map>

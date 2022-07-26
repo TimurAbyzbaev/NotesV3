@@ -1,6 +1,8 @@
 package ru.abyzbaev.mynotes;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -17,6 +19,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 
 public class NoteFragment extends Fragment {
@@ -73,9 +77,34 @@ public class NoteFragment extends Fragment {
             FloatingActionButton deleteButton = view.findViewById(R.id.btnDelete);
             deleteButton.setOnClickListener(v -> {
                 //TODO удалить заметку
-                requireActivity().getSupportFragmentManager().popBackStack();
-                Note.deleteNote(note.getId());
-                updateData();
+                new AlertDialog.Builder(requireContext()).setTitle("Внимание!")
+                                .setMessage("Вы действительно хотите удалить заметку?")
+                                        .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Note tempNote = note;
+                                                int tempId = note.getId();
+                                                requireActivity().getSupportFragmentManager().popBackStack();
+                                                Note.deleteNote(note.getId());
+                                                updateData();
+                                                Snackbar.make(view,"Заметка удалена",BaseTransientBottomBar.LENGTH_LONG)
+                                                        .setAction("Return", new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+                                                                Note.addNote(tempId,tempNote);
+                                                                //TODO Обновить страницу
+                                                                updateData();
+                                                            }
+                                                        })
+                                                        .show();
+                                            }
+                                        })
+                        .setNegativeButton("Нет", null)
+                        .setNeutralButton("Отмена", null).show();
+
+
+
+
             });
 
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {

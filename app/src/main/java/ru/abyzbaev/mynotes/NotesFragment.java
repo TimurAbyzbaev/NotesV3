@@ -22,6 +22,8 @@ import android.widget.Toast;
 import static ru.abyzbaev.mynotes.NoteFragment.SELECTED_NOTE;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -87,6 +89,7 @@ public class NotesFragment extends Fragment {
         return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
+
     public void initNotes() {
         initNotes(dataContainer);
     }
@@ -127,8 +130,18 @@ public class NotesFragment extends Fragment {
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()){
                         case R.id.action_popup_delete:
+                            Note tempNote = note.getValue();
+                            int id = tempNote.getId();
                             Note.deleteNote(note.getValue().getId());
                             initNotes();
+                            //Snackbar.make(requireView(),"Заметка удалена", BaseTransientBottomBar.LENGTH_SHORT).show();
+                            Snackbar.make(requireView(),"Заметка удалена", BaseTransientBottomBar.LENGTH_LONG).setAction("Return", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Note.addNote(id, tempNote);
+                                    initNotes();
+                                }
+                            }).show();
                             return true;
                     }
                     return true;

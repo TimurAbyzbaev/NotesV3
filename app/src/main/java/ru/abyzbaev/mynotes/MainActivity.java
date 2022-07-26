@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                         openAboutFragment();
                         return true;
                     case R.id.action_drawer_exit:
+                        Toast.makeText(getApplicationContext(), "Note app closed", Toast.LENGTH_SHORT).show();
                         finish();
                         return true;
                     default:

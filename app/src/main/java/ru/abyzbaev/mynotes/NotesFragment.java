@@ -1,11 +1,14 @@
 package ru.abyzbaev.mynotes;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -62,16 +65,8 @@ public class NotesFragment extends Fragment {
 
 
 
-        /**
-         * Кнопка "добавить" заметку
-         */
-        FloatingActionButton addButton = view.findViewById(R.id.btnAdd);
-        addButton.setOnClickListener(n -> {
-            Note.addNote();
-            initNotes();
-            note = Note.getNotes().get(Note.getCounter() - 1);
-            showNoteDetails(note);
-        });
+
+
 
         if (savedInstanceState != null) {
             note = (Note) savedInstanceState.getParcelable(SELECTED_NOTE);
@@ -83,6 +78,15 @@ public class NotesFragment extends Fragment {
         }
     }
 
+    /**
+     * Добавить заметку
+     */
+    public void addNote(){
+        Note.addNote();
+        initNotes();
+        note = Note.getNotes().get(Note.getCounter() - 1);
+        showNoteDetails(note);
+    }
 
 
     private boolean isLandscape() {
@@ -94,6 +98,7 @@ public class NotesFragment extends Fragment {
         initNotes(dataContainer);
     }
 
+    @SuppressLint("ResourceAsColor")
     private void initNotes(View view) {
         LinearLayout layoutView = (LinearLayout) view;
         layoutView.removeAllViews();
@@ -104,6 +109,7 @@ public class NotesFragment extends Fragment {
             TextView tv = new TextView(getContext());
             tv.setText(note.getValue().getTitle());
             tv.setTextSize(24);
+            tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.black));
             tv.setPadding(50,0,5,5);
             layoutView.addView(tv);
             //final int index = i;

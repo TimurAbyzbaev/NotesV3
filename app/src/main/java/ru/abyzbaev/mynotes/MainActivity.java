@@ -3,62 +3,52 @@ package ru.abyzbaev.mynotes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.res.Configuration;
-import android.net.LinkAddress;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
-
+    NotesFragment notesFragment = new NotesFragment();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initToolbar(isLandscape());
+
         if(savedInstanceState == null){
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.notes_container, new NotesFragment())
+                    .add(R.id.notes_container, notesFragment)
                     .commit();
         }
-        //androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-        initDrawer();
+    }
+    private boolean isLandscape() {
+        return getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_LANDSCAPE;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu,menu);
-        LinearLayout profile = findViewById(R.id.profile_edit);
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        "Настройки профиля!", Toast.LENGTH_SHORT);
-                toast.show();
-
-            }
-        });
-        return super.onCreateOptionsMenu(menu);
+    private void initToolbar(boolean isLandscape){
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (!isLandscape)
+            initDrawer(toolbar);
+        //initDrawer(toolbar);
     }
 
-    private void initDrawer(){
+    private void initDrawer(Toolbar toolbar){
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
-
-
-
-
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -82,23 +72,44 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+
     private void openAboutFragment() {
-       if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .addToBackStack("")
-                    .add(R.id.note_container, new AboutFragment())
-                    .commit();
-       }
-        else{
+       //if(isLandscape()){
             getSupportFragmentManager()
                     .beginTransaction()
                     .addToBackStack("")
                     .add(R.id.notes_container, new AboutFragment())
                     .commit();
-        }
+       //}
+        /*else{
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .addToBackStack("")
+                    .add(R.id.notes_container, new AboutFragment())
+                    .commit();
+        }*/
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
+        int id = item.getItemId();
+        switch (id){
+            case R.id.action_add:
+                notesFragment.addNote();
+
+                break;
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

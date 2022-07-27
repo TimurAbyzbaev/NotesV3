@@ -135,13 +135,7 @@ public class NotesFragment extends Fragment {
                             Note.deleteNote(note.getValue().getId());
                             initNotes();
                             //Snackbar.make(requireView(),"Заметка удалена", BaseTransientBottomBar.LENGTH_SHORT).show();
-                            Snackbar.make(requireView(),"Заметка удалена", BaseTransientBottomBar.LENGTH_LONG).setAction("Return", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Note.addNote(id, tempNote);
-                                    initNotes();
-                                }
-                            }).show();
+                            showSnakbar(id, tempNote);
                             return true;
                     }
                     return true;
@@ -150,6 +144,16 @@ public class NotesFragment extends Fragment {
             popupMenu.show();
             return true;
         });
+    }
+
+    public void showSnakbar(int id, Note tempNote){
+        Snackbar.make(requireView(),"Заметка удалена", BaseTransientBottomBar.LENGTH_LONG).setAction("Return", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Note.addNote(id, tempNote);
+                initNotes();
+            }
+        }).show();
     }
 
     private void showNoteDetails(Note note) {

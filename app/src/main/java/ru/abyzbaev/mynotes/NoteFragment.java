@@ -87,16 +87,8 @@ public class NoteFragment extends Fragment {
                                                 requireActivity().getSupportFragmentManager().popBackStack();
                                                 Note.deleteNote(note.getId());
                                                 updateData();
-                                                Snackbar.make(view,"Заметка удалена",BaseTransientBottomBar.LENGTH_LONG)
-                                                        .setAction("Return", new View.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View v) {
-                                                                Note.addNote(tempId,tempNote);
-                                                                //TODO Обновить страницу
-                                                                updateData();
-                                                            }
-                                                        })
-                                                        .show();
+                                                getNotesFragment().showSnakbar(tempId, tempNote);
+
                                             }
                                         })
                         .setNegativeButton("Нет", null)
@@ -152,14 +144,14 @@ public class NoteFragment extends Fragment {
 
     }
 
+    private NotesFragment getNotesFragment(){
+        return (NotesFragment) requireActivity().getSupportFragmentManager()
+                .getFragments().stream().filter(fragment -> fragment instanceof NotesFragment).findFirst().get();
+    }
+
+
     private void updateData() {
-        NotesFragment notesFragment = (NotesFragment) requireActivity()
-                .getSupportFragmentManager()
-                .getFragments().stream()
-                .filter(fragment -> fragment instanceof NotesFragment)
-                .findFirst()
-                .get();
-        notesFragment.initNotes();
+        getNotesFragment().initNotes();
     }
 
     public static NoteFragment newInstance(Note note) {

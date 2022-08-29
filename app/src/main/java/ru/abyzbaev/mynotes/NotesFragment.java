@@ -67,16 +67,15 @@ public class NotesFragment extends Fragment {
                 Toast.makeText(getContext(), String.format("%s - %d", ((TextView)view).getText(), position),Toast.LENGTH_SHORT).show();
                 showNoteDetails(notes.get(position));
             }
-
             @Override
             public void onItemLongClick(View view, int position) {
-                initPopupMenu(view, notes.get(position));
+                initPopupMenu(view, notes.get(position), position);
             }
         });
     }
 
 
-    private void initPopupMenu(View view, Note note) {
+    private void initPopupMenu(View view, Note note, int position) {
         Activity activity = requireActivity();
         PopupMenu popupMenu = new PopupMenu(activity, view);
         activity.getMenuInflater().inflate(R.menu.popup, popupMenu.getMenu());
@@ -86,10 +85,12 @@ public class NotesFragment extends Fragment {
                 switch (item.getItemId()){
                     case R.id.action_popup_delete:
                         Note tempNote = note;
-                        int id = tempNote.getId();
-                        Note.deleteNote(note.getId());
+                        //int id = tempNote.getId();
+                        Note.deleteNote(position);
+                        //Note.deleteNote(note.getId());
                         initRecycleView();
-                        showSnackbar(id, tempNote);
+                        //showSnackbar(id, tempNote);
+                        showSnackbar(position,tempNote);
                         return true;
                 }
                 return true;
@@ -128,11 +129,12 @@ public class NotesFragment extends Fragment {
     }
 
 
-    public void showSnackbar(int id, Note tempNote){
+    public void showSnackbar(int position, Note tempNote){
         Snackbar.make(requireView(),"Заметка удалена", BaseTransientBottomBar.LENGTH_LONG).setAction("Return", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Note.addNote(id, tempNote);
+                //Note.addNote(id, tempNote);
+                Note.returnNote(position, tempNote);
                 initRecycleView();
             }
         }).show();

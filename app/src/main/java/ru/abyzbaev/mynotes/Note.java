@@ -15,9 +15,6 @@ public class Note implements Parcelable {
     private LocalDateTime creationDate;
     private static int counter = 0;
     private int id;
-    //private static ArrayList<Note> notes = new ArrayList<>();
-    //private static HashMap<Integer, Note> notes = new HashMap<>();
-    //СТООООООООООООООООООООООООООООООООП
     private static List<Note> notes = new ArrayList<>();
     public static int getCounter() {
         return counter;
@@ -25,14 +22,12 @@ public class Note implements Parcelable {
 
     public static void deleteNote(int id) {
         notes.remove(id);
+        for (Note note : notes) {
+            System.out.println(note.getId());
+        }
+        //System.out.println();
         counter--;
     }
-
-    /*public static void deleteNote(int id) {
-        Note note = Note.getNotes().stream().filter(n -> n.getId() == id).findFirst().get();
-        notes.remove(note);
-        counter--;
-    }*/
 
     /**
      * разобраться с добавление и вылетами приложения
@@ -47,13 +42,13 @@ public class Note implements Parcelable {
         notes.add(note);
     }
 
-    public static void returnNote(int id, Note note){
-        
+    public static void returnNote(int position, Note note){
+        notes.add(position, note);
     }
 
     {
         id = counter++;
-        System.out.println(counter + " counter");
+        //System.out.println(counter + " counter");
     }
 
     static {
@@ -62,6 +57,7 @@ public class Note implements Parcelable {
             //notes.put(i,getNote(i));
             //counter++;
             notes.add(getNote(i));
+            //addNote();
         }
     }
 

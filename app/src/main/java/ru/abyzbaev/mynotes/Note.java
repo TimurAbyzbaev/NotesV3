@@ -7,23 +7,25 @@ import android.os.Parcelable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Note implements Parcelable {
     private String title;
     private String description;
     private LocalDateTime creationDate;
-    private static int counter = 1;
+    private static int counter = 0;
     private int id;
     //private static ArrayList<Note> notes = new ArrayList<>();
-    private static HashMap<Integer, Note> notes = new HashMap<>();
-
+    //private static HashMap<Integer, Note> notes = new HashMap<>();
+    //СТООООООООООООООООООООООООООООООООП
+    private static List<Note> notes = new ArrayList<>();
     public static int getCounter() {
         return counter;
     }
 
     public static void deleteNote(int id) {
         notes.remove(id);
-        //counter--;
+        counter--;
     }
 
     /*public static void deleteNote(int id) {
@@ -36,22 +38,30 @@ public class Note implements Parcelable {
      * разобраться с добавление и вылетами приложения
      */
     public static void addNote() {
-        counter++;
-
-        notes.put(counter, new Note("Новая заметка", ""));
+        //counter++;
+        notes.add(new Note("Новая заметка", ""));
+        //notes.put(counter, new Note("Новая заметка", ""));
     }
     public static void addNote(int id,Note note) {
-        notes.put(id, note);
+        //notes.put(id, note);
+        notes.add(note);
+    }
+
+    public static void returnNote(int id, Note note){
+        
     }
 
     {
         id = counter++;
+        System.out.println(counter + " counter");
     }
 
     static {
 
-        for (int i = 1; i < 2; i++) {
-            notes.put(i,getNote(i));
+        for (int i = 0; i < 4; i++) {
+            //notes.put(i,getNote(i));
+            //counter++;
+            notes.add(getNote(i));
         }
     }
 
@@ -96,7 +106,7 @@ public class Note implements Parcelable {
         this.creationDate = creationDate;
     }
 
-    public static HashMap<Integer, Note> getNotes() {
+    public static List<Note> getNotes() {
         return notes;
     }
 

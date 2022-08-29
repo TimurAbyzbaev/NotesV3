@@ -21,10 +21,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
-
 
 public class NoteFragment extends Fragment {
 
@@ -51,9 +47,13 @@ public class NoteFragment extends Fragment {
         inflater.inflate(R.menu.note_menu, menu);
 
         MenuItem menuItemAdd = menu.findItem(R.id.action_add);
-        if(menuItemAdd != null)
+        if(menuItemAdd != null && !isLandscape())
             menuItemAdd.setVisible(false);
 
+    }
+
+    private boolean isLandscape() {
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     /**
@@ -74,7 +74,7 @@ public class NoteFragment extends Fragment {
                             requireActivity().getSupportFragmentManager().popBackStack();
                             Note.deleteNote(note.getId());
                             updateData();
-                            getNotesFragment().showSnakbar(tempId, tempNote);
+                            getNotesFragment().showSnackbar(tempId, tempNote);
 
                         }
                     })
@@ -170,7 +170,8 @@ public class NoteFragment extends Fragment {
 
 
     private void updateData() {
-        getNotesFragment().initNotes();
+        //getNotesFragment().initNotes();
+        getNotesFragment().initRecycleView();
     }
 
     public static NoteFragment newInstance(Note note) {

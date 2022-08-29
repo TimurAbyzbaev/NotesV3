@@ -1,40 +1,34 @@
 package ru.abyzbaev.mynotes;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.print.PrintAttributes;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import static ru.abyzbaev.mynotes.NoteFragment.SELECTED_NOTE;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Logger;
+import java.util.List;
 
 public class NotesFragment extends Fragment {
     Note note;
-    View dataContainer;
+    RecyclerView recyclerView;
 
     public NotesFragment() {
         // Required empty public constructor
@@ -56,25 +50,61 @@ public class NotesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notes, container, false);
+        View view = inflater.inflate(R.layout.fragment_notes, container, false);
+        recyclerView = view.findViewById(R.id.recycle_view_lines);
+        initRecycleView(recyclerView, Note.getNotes());
+        return view;
     }
+
+
+
+    private void initRecycleView(RecyclerView recyclerView, List<Note> notes){
+        ListAdapter listAdapter = new ListAdapter(notes);
+        recyclerView.setAdapter(listAdapter);
+        listAdapter.setItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(getContext(), String.format("%s - %d", ((TextView)view).getText(), position),Toast.LENGTH_SHORT).show();
+                showNoteDetails(notes.get(position));
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                initPopupMenu(view, notes.get(position));
+            }
+        });
+    }
+
+
+    private void initPopupMenu(View view, Note note) {
+        Activity activity = requireActivity();
+        PopupMenu popupMenu = new PopupMenu(activity, view);
+        activity.getMenuInflater().inflate(R.menu.popup, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.action_popup_delete:
+                        Note tempNote = note;
+                        int id = tempNote.getId();
+                        Note.deleteNote(note.getId());
+                        initRecycleView();
+                        showSnackbar(id, tempNote);
+                        return true;
+                }
+                return true;
+            }
+        });
+        popupMenu.show();
+    }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
-
-
-
         if (savedInstanceState != null) {
             note = (Note) savedInstanceState.getParcelable(SELECTED_NOTE);
-        }
-        dataContainer = view.findViewById(R.id.data_container);
-        initNotes(dataContainer);
-        if (isLandscape()) {
-            showLandNoteDetails(note);
         }
     }
 
@@ -83,8 +113,8 @@ public class NotesFragment extends Fragment {
      */
     public void addNote(){
         Note.addNote();
-        initNotes();
-        note = Note.getNotes().get(Note.getCounter() - 1);
+        note = Note.getNotes().get(Note.getCounter()-1);
+        initRecycleView();
         showNoteDetails(note);
     }
 
@@ -93,71 +123,17 @@ public class NotesFragment extends Fragment {
         return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
-
-    public void initNotes() {
-        initNotes(dataContainer);
+    public void initRecycleView(){
+        initRecycleView(recyclerView, Note.getNotes());
     }
 
-    @SuppressLint("ResourceAsColor")
-    private void initNotes(View view) {
-        LinearLayout layoutView = (LinearLayout) view;
-        layoutView.removeAllViews();
-        HashMap<Integer,Note> notes = Note.getNotes();
-        int i = 1;
-        for (Map.Entry<Integer, Note> note: notes.entrySet())
-        {
-            TextView tv = new TextView(getContext());
-            tv.setText(note.getValue().getTitle());
-            tv.setTextSize(24);
-            tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.black));
-            tv.setPadding(50,0,5,5);
-            layoutView.addView(tv);
-            //final int index = i;
-            tv.setOnClickListener(V -> {
-                showNoteDetails(note.getValue());
-                    });
-            /*tv.setOnClickListener(v ->
-                    showNoteDetails(Note.getNotes().get(index)));
 
-            );*/
-            initPopupMenu(tv, note);
-
-            i++;
-        }
-    }
-
-    private void initPopupMenu(TextView tv, Map.Entry<Integer, Note> note) {
-        tv.setOnLongClickListener(n -> {
-            Activity activity = requireActivity();
-            PopupMenu popupMenu = new PopupMenu(activity,n);
-            activity.getMenuInflater().inflate(R.menu.popup, popupMenu.getMenu());
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()){
-                        case R.id.action_popup_delete:
-                            Note tempNote = note.getValue();
-                            int id = tempNote.getId();
-                            Note.deleteNote(note.getValue().getId());
-                            initNotes();
-                            //Snackbar.make(requireView(),"Заметка удалена", BaseTransientBottomBar.LENGTH_SHORT).show();
-                            showSnakbar(id, tempNote);
-                            return true;
-                    }
-                    return true;
-                }
-            });
-            popupMenu.show();
-            return true;
-        });
-    }
-
-    public void showSnakbar(int id, Note tempNote){
+    public void showSnackbar(int id, Note tempNote){
         Snackbar.make(requireView(),"Заметка удалена", BaseTransientBottomBar.LENGTH_LONG).setAction("Return", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Note.addNote(id, tempNote);
-                initNotes();
+                initRecycleView();
             }
         }).show();
     }

@@ -22,7 +22,15 @@
             android:id="@+id/data_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycle_view_lines"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/card_frame"/>
+        </LinearLayout>
+
 
     </androidx.core.widget.NestedScrollView>
 

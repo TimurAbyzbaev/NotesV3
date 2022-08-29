@@ -1,6 +1,8 @@
 package ru.abyzbaev.mynotes;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -11,12 +13,17 @@ import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 
 public class NoteFragment extends Fragment {
@@ -39,8 +46,52 @@ public class NoteFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.note_menu, menu);
+
+        MenuItem menuItemAdd = menu.findItem(R.id.action_add);
+        if(menuItemAdd != null)
+            menuItemAdd.setVisible(false);
+
+    }
+
+    /**
+     * Удаление заметки
+     */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_delete)
+        {
+            //TODO: Удаление заметки ...
+            new AlertDialog.Builder(requireContext()).setTitle("Внимание!")
+                    .setMessage("Вы действительно хотите удалить заметку?")
+                    .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Note tempNote = note;
+                            int tempId = note.getId();
+                            requireActivity().getSupportFragmentManager().popBackStack();
+                            Note.deleteNote(note.getId());
+                            updateData();
+                            getNotesFragment().showSnakbar(tempId, tempNote);
+
+                        }
+                    })
+                    .setNegativeButton("Нет", null)
+                    .setNeutralButton("Отмена", null).show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if(savedInstanceState == null){
+            setHasOptionsMenu(true);
+        }
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_note, container, false);
     }
@@ -67,22 +118,10 @@ public class NoteFragment extends Fragment {
                 requireActivity().getSupportFragmentManager().popBackStack();
             });
 
-            /**
-             * Удаление заметки
-             */
-            FloatingActionButton deleteButton = view.findViewById(R.id.btnDelete);
-            deleteButton.setOnClickListener(v -> {
-                //TODO удалить заметку
-                requireActivity().getSupportFragmentManager().popBackStack();
-                Note.deleteNote(note.getId());
-                updateData();
-            });
-
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 buttonBack.setClickable(false);
                 buttonBack.setVisibility(View.INVISIBLE);
             }
-
 
             TextView tvTitle = view.findViewById(R.id.tvTitle);
             tvTitle.setText(note.getTitle());
@@ -120,17 +159,18 @@ public class NoteFragment extends Fragment {
                 }
             });
         }
-
     }
 
+
+
+    private NotesFragment getNotesFragment(){
+        return (NotesFragment) requireActivity().getSupportFragmentManager()
+                .getFragments().stream().filter(fragment -> fragment instanceof NotesFragment).findFirst().get();
+    }
+
+
     private void updateData() {
-        NotesFragment notesFragment = (NotesFragment) requireActivity()
-                .getSupportFragmentManager()
-                .getFragments().stream()
-                .filter(fragment -> fragment instanceof NotesFragment)
-                .findFirst()
-                .get();
-        notesFragment.initNotes();
+        getNotesFragment().initNotes();
     }
 
     public static NoteFragment newInstance(Note note) {

@@ -40,6 +40,9 @@ public class Note implements Parcelable {
 
         notes.put(counter, new Note("Новая заметка", ""));
     }
+    public static void addNote(int id,Note note) {
+        notes.put(id, note);
+    }
 
     {
         id = counter++;

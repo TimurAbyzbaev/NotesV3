@@ -88,7 +88,7 @@ public class NotesFragment extends Fragment {
                         //int id = tempNote.getId();
                         Note.deleteNote(position);
                         //Note.deleteNote(note.getId());
-                        initRecycleView();
+                        initRecycleView(recyclerView, Note.getNotes());
                         //showSnackbar(id, tempNote);
                         showSnackbar(position,tempNote);
                         return true;

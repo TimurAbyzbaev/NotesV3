@@ -108,7 +108,8 @@ public class NoteFragment extends Fragment {
                 note = Note.getNotes().get(1);
             } else {
                 //note = Note.getNotes().stream().filter(n -> n.getId() == paramNote.getId()).findFirst().get();
-                note = Note.getNotes().get(paramNote.getId());
+                //note = Note.getNotes().get(paramNote.getId());
+                note  = paramNote;
             }
             /**
              * Кнопка назад

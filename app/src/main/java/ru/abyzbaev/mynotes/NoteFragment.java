@@ -22,16 +22,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 
 public class NoteFragment extends Fragment {
 
     static final String SELECTED_NOTE = "note";
     private Note note;
-    private Publisher publisher;
+    //private Publisher publisher;
     private DatePicker datePicker;
 
     public NoteFragment() {
@@ -103,7 +106,7 @@ public class NoteFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_note, container, false);
     }
 
-    @Override
+    /*@Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         MainActivity mainActivity = (MainActivity) context;
@@ -114,7 +117,7 @@ public class NoteFragment extends Fragment {
     public void onDetach() {
         publisher = null;
         super.onDetach();
-    }
+    }*/
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -159,8 +162,19 @@ public class NoteFragment extends Fragment {
                 }
             });
 
-            datePicker = view.findViewById(R.id.inputDate);
-            initDatePicker(note.getCreationDate());
+            TextView datePickerTextView= view.findViewById(R.id.inputDate);
+            datePickerTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO открыть фрагмент с пикером
+                    Toast.makeText(requireContext(),"датапикер", Toast.LENGTH_SHORT).show();
+                    initDatePicker(note);
+                }
+            });
+            SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yy");
+            //SimpleDateFormat formatterV2 = new SimpleDateFormat(note.getCreationDate().toString(), Locale.US);
+            datePickerTextView.setText(formatter.format(note.getCreationDate()));
+            //initDatePicker(note.getCreationDate());
 
             TextView tvDescription = view.findViewById(R.id.tvDescription);
             tvDescription.setText(note.getDescription());
@@ -181,24 +195,15 @@ public class NoteFragment extends Fragment {
             });
         }
     }
-
-    private void initDatePicker(Date creationDate) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(creationDate);
-        this.datePicker.init(calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH),
-                null);
+    private void initDatePicker(Note note){
+        DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(note);
+        //datePickerFragment.setArguments(note);
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.notes_container, new DatePickerFragment())
+                .addToBackStack("")
+                .commit();
     }
-
-    private Date getDateFromDatePicker() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, this.datePicker.getYear());
-        cal.set(Calendar.MONTH, this.datePicker.getMonth());
-        cal.set(Calendar.DAY_OF_MONTH, this.datePicker.getDayOfMonth());
-        return cal.getTime();
-    }
-
 
     private NotesFragment getNotesFragment(){
         return (NotesFragment) requireActivity().getSupportFragmentManager()

@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class Note implements Parcelable {
+public class Note implements Parcelable, Observer {
     private String title;
     private String description;
     private Date date;
@@ -66,6 +66,7 @@ public class Note implements Parcelable {
         String name = String.format("Заметка %d", index);
         String descr = String.format("Описание %d", index);
         Date date = Calendar.getInstance().getTime();
+
         return new Note(name, descr, date);
 
     }
@@ -137,4 +138,11 @@ public class Note implements Parcelable {
             return new Note[size];
         }
     };
+
+
+    @Override
+    public void updateNoteData(Date date) {
+
+        this.date = date;
+    }
 }

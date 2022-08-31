@@ -16,7 +16,7 @@ import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
     private Navigation navigation;
-    private Publisher publisher = new Publisher();
+    //private Publisher publisher = new Publisher();
 
     NotesFragment notesFragment = new NotesFragment();
     @Override
@@ -24,21 +24,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        navigation = new Navigation(getSupportFragmentManager());
-
         initToolbar(isLandscape());
 
-        getNavigation().addFragment(NoteFragment.newInstance(), false);
-        /*if(savedInstanceState == null){
+        if(savedInstanceState == null){
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.notes_container, notesFragment)
                     .commit();
-        }*/
-    }
-
-    private Navigation getNavigation() {
-        return navigation;
+        }
     }
 
     private boolean isLandscape() {
@@ -124,7 +117,4 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public Publisher getPublisher() {
-        return publisher;
-    }
 }

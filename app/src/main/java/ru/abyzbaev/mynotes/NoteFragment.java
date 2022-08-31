@@ -2,6 +2,7 @@ package ru.abyzbaev.mynotes;
 
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -19,13 +20,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
+
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class NoteFragment extends Fragment {
 
     static final String SELECTED_NOTE = "note";
     private Note note;
+    private Publisher publisher;
+    private DatePicker datePicker;
 
     public NoteFragment() {
         // Required empty public constructor
@@ -97,6 +104,19 @@ public class NoteFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        MainActivity mainActivity = (MainActivity) context;
+        publisher = mainActivity.getPublisher();
+    }
+
+    @Override
+    public void onDetach() {
+        publisher = null;
+        super.onDetach();
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Bundle arguments = getArguments();
@@ -104,11 +124,8 @@ public class NoteFragment extends Fragment {
         if (arguments != null) {
             Note paramNote = (Note) arguments.getParcelable(SELECTED_NOTE);
             if (paramNote == null) {
-                //note = Note.getNotes().
                 note = Note.getNotes().get(1);
             } else {
-                //note = Note.getNotes().stream().filter(n -> n.getId() == paramNote.getId()).findFirst().get();
-                //note = Note.getNotes().get(paramNote.getId());
                 note  = paramNote;
             }
             /**
@@ -142,6 +159,9 @@ public class NoteFragment extends Fragment {
                 }
             });
 
+            datePicker = view.findViewById(R.id.inputDate);
+            initDatePicker(note.getCreationDate());
+
             TextView tvDescription = view.findViewById(R.id.tvDescription);
             tvDescription.setText(note.getDescription());
             tvDescription.addTextChangedListener(new TextWatcher() {
@@ -162,6 +182,22 @@ public class NoteFragment extends Fragment {
         }
     }
 
+    private void initDatePicker(Date creationDate) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(creationDate);
+        this.datePicker.init(calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH),
+                null);
+    }
+
+    private Date getDateFromDatePicker() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, this.datePicker.getYear());
+        cal.set(Calendar.MONTH, this.datePicker.getMonth());
+        cal.set(Calendar.DAY_OF_MONTH, this.datePicker.getDayOfMonth());
+        return cal.getTime();
+    }
 
 
     private NotesFragment getNotesFragment(){

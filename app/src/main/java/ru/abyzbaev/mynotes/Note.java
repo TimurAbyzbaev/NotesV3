@@ -6,13 +6,15 @@ import android.os.Parcelable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 public class Note implements Parcelable {
     private String title;
     private String description;
-    private LocalDateTime creationDate;
+    private Date date;
     private static int counter = 0;
     private int id;
     private static List<Note> notes = new ArrayList<>();
@@ -25,7 +27,6 @@ public class Note implements Parcelable {
         for (Note note : notes) {
             System.out.println(note.getId());
         }
-        //System.out.println();
         counter--;
     }
 
@@ -33,12 +34,9 @@ public class Note implements Parcelable {
      * разобраться с добавление и вылетами приложения
      */
     public static void addNote() {
-        //counter++;
-        notes.add(new Note("Новая заметка", ""));
-        //notes.put(counter, new Note("Новая заметка", ""));
+        notes.add(new Note("Новая заметка", "", Calendar.getInstance().getTime()));
     }
     public static void addNote(int id,Note note) {
-        //notes.put(id, note);
         notes.add(note);
     }
 
@@ -48,29 +46,27 @@ public class Note implements Parcelable {
 
     {
         id = counter++;
-        //System.out.println(counter + " counter");
     }
 
     static {
 
         for (int i = 0; i < 4; i++) {
-            //notes.put(i,getNote(i));
-            //counter++;
             notes.add(getNote(i));
-            //addNote();
         }
     }
 
-    public Note(String title, String description) {
+    public Note(String title, String description,Date date) {
         this.title = title;
         this.description = description;
+        this.date = date;
     }
 
     @SuppressLint("DefaultLocale")
     public static Note getNote(int index) {
         String name = String.format("Заметка %d", index);
         String descr = String.format("Описание %d", index);
-        return new Note(name, descr);
+        Date date = Calendar.getInstance().getTime();
+        return new Note(name, descr, date);
 
     }
 
@@ -86,8 +82,8 @@ public class Note implements Parcelable {
         return description;
     }
 
-    public LocalDateTime getCreationDate() {
-        return creationDate;
+    public Date getCreationDate() {
+        return date;
     }
 
     public void setTitle(String title) {
@@ -98,8 +94,8 @@ public class Note implements Parcelable {
         this.description = description;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
+    public void setCreationDate(Date creationDate) {
+        this.date = creationDate;
     }
 
     public static List<Note> getNotes() {
@@ -114,6 +110,7 @@ public class Note implements Parcelable {
         id = parcel.readInt();
         title = parcel.readString();
         description = parcel.readString();
+        date = new Date(parcel.readLong());
     }
 
     @Override
@@ -126,6 +123,7 @@ public class Note implements Parcelable {
         parcel.writeInt(getId());
         parcel.writeString(getTitle());
         parcel.writeString(getDescription());
+        parcel.writeLong(date.getTime());
     }
 
     public static final Creator<Note> CREATOR = new Creator<Note>() {

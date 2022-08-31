@@ -85,11 +85,8 @@ public class NotesFragment extends Fragment {
                 switch (item.getItemId()){
                     case R.id.action_popup_delete:
                         Note tempNote = note;
-                        //int id = tempNote.getId();
                         Note.deleteNote(position);
-                        //Note.deleteNote(note.getId());
                         initRecycleView(recyclerView, Note.getNotes());
-                        //showSnackbar(id, tempNote);
                         showSnackbar(position,tempNote);
                         return true;
                 }
@@ -105,7 +102,7 @@ public class NotesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         if (savedInstanceState != null) {
-            note = (Note) savedInstanceState.getParcelable(SELECTED_NOTE);
+            note = savedInstanceState.getParcelable(SELECTED_NOTE);
         }
     }
 
@@ -133,7 +130,6 @@ public class NotesFragment extends Fragment {
         Snackbar.make(requireView(),"Заметка удалена", BaseTransientBottomBar.LENGTH_LONG).setAction("Return", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Note.addNote(id, tempNote);
                 Note.returnNote(position, tempNote);
                 initRecycleView();
             }

@@ -15,21 +15,32 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
+    private Navigation navigation;
+    private Publisher publisher = new Publisher();
+
     NotesFragment notesFragment = new NotesFragment();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        navigation = new Navigation(getSupportFragmentManager());
+
         initToolbar(isLandscape());
 
-        if(savedInstanceState == null){
+        getNavigation().addFragment(NoteFragment.newInstance(), false);
+        /*if(savedInstanceState == null){
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.notes_container, notesFragment)
                     .commit();
-        }
+        }*/
     }
+
+    private Navigation getNavigation() {
+        return navigation;
+    }
+
     private boolean isLandscape() {
         return getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE;
@@ -111,5 +122,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public Publisher getPublisher() {
+        return publisher;
     }
 }

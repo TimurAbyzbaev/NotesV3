@@ -23,6 +23,16 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
+    <DatePicker
+        android:id="@+id/inputDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="text"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnBack" />
+
     <EditText
         android:id="@+id/tvDescription"
         android:layout_width="0dp"

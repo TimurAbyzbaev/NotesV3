@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class Note implements Parcelable, Observer {
+public class Note implements Parcelable {
     private String title;
     private String description;
     private Date date;
@@ -49,7 +49,6 @@ public class Note implements Parcelable, Observer {
     }
 
     static {
-
         for (int i = 0; i < 4; i++) {
             notes.add(getNote(i));
         }
@@ -83,7 +82,7 @@ public class Note implements Parcelable, Observer {
         return description;
     }
 
-    public Date getCreationDate() {
+    public Date getDate() {
         return date;
     }
 
@@ -95,23 +94,19 @@ public class Note implements Parcelable, Observer {
         this.description = description;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.date = creationDate;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public static List<Note> getNotes() {
         return notes;
     }
 
-    /*public static ArrayList<Note> getNotes() {
-        return notes;
-    }*/
-
-    protected Note(Parcel parcel) {
-        id = parcel.readInt();
-        title = parcel.readString();
-        description = parcel.readString();
-        date = new Date(parcel.readLong());
+    protected Note(Parcel in) {
+        id = in.readInt();
+        title = in.readString();
+        description = in.readString();
+        date = new Date(in.readLong());
     }
 
     @Override
@@ -120,17 +115,17 @@ public class Note implements Parcelable, Observer {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(getId());
-        parcel.writeString(getTitle());
-        parcel.writeString(getDescription());
-        parcel.writeLong(date.getTime());
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(getId());
+        dest.writeString(getTitle());
+        dest.writeString(getDescription());
+        dest.writeLong(date.getTime());
     }
 
     public static final Creator<Note> CREATOR = new Creator<Note>() {
         @Override
-        public Note createFromParcel(Parcel parcel) {
-            return new Note(parcel);
+        public Note createFromParcel(Parcel in) {
+            return new Note(in);
         }
 
         @Override
@@ -138,11 +133,4 @@ public class Note implements Parcelable, Observer {
             return new Note[size];
         }
     };
-
-
-    @Override
-    public void updateNoteData(Date date) {
-
-        this.date = date;
-    }
 }

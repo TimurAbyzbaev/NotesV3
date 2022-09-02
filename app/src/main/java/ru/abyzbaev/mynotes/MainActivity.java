@@ -16,22 +16,52 @@ import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
     private Navigation navigation;
-    //private Publisher publisher = new Publisher();
+    private Publisher publisher = new Publisher();
+
 
     NotesFragment notesFragment = new NotesFragment();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        navigation = new Navigation(getSupportFragmentManager());
 
         initToolbar(isLandscape());
 
-        if(savedInstanceState == null){
+        getNavigation().addFragment(notesFragment, false);
+        /*if(savedInstanceState == null){
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.notes_container, notesFragment)
                     .commit();
-        }
+        }*/
+    }
+
+
+
+    private void initToolbar(boolean isLandscape){
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (!isLandscape)
+            initDrawer(toolbar);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    public Navigation getNavigation() {
+        return navigation;
+    }
+
+    public Publisher getPublisher() {
+        return publisher;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private boolean isLandscape() {
@@ -39,13 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 == Configuration.ORIENTATION_LANDSCAPE;
     }
 
-    private void initToolbar(boolean isLandscape){
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (!isLandscape)
-            initDrawer(toolbar);
-        //initDrawer(toolbar);
-    }
+
 
     private void initDrawer(Toolbar toolbar){
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -57,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
                 int id = item.getItemId();
                 switch (id){
                     case R.id.action_drawer_about:
@@ -73,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     @Override
@@ -82,39 +104,22 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-
-
     private void openAboutFragment() {
-       //if(isLandscape()){
             getSupportFragmentManager()
                     .beginTransaction()
                     .addToBackStack("")
                     .add(R.id.notes_container, new AboutFragment())
                     .commit();
-       //}
-        /*else{
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .addToBackStack("")
-                    .add(R.id.notes_container, new AboutFragment())
-                    .commit();
-        }*/
-
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
         int id = item.getItemId();
         switch (id){
             case R.id.action_add:
                 notesFragment.addNote();
-
                 break;
-
         }
-
         return super.onOptionsItemSelected(item);
     }
-
 }
